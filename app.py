@@ -13,7 +13,7 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded"
 )
-
+ 
 # Configuración desde variables de entorno
 HF_TOKEN = os.getenv("HF_TOKEN")
 assert HF_TOKEN, "❌ HF_TOKEN no encontrado en variables de entorno!"
