@@ -13,7 +13,7 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded"
 )
- 
+
 # Configuración desde variables de entorno
 HF_TOKEN = os.getenv("HF_TOKEN")
 assert HF_TOKEN, "❌ HF_TOKEN no encontrado en variables de entorno!"
@@ -24,21 +24,22 @@ assert HF_TOKEN, "❌ HF_TOKEN no encontrado en variables de entorno!"
 MODEL_NAME = "HuggingFaceH4/zephyr-7b-beta"
 
 # ======================
-# CONFIGURACIÓN OPTIMIZADA PARA PRODUCCIÓN
+# CONFIGURACIÓN OPTIMIZADA
 # ======================
 MODEL_CONFIG = {
     "HuggingFaceH4/zephyr-7b-beta": {
-        "max_new_tokens": 384,  # Parámetro renombrado
+        "max_new_tokens": 384,
         "temperature": 0.2,
         "top_p": 0.95,
-        # Eliminado stop_sequences (no compatible con chat_completion)
-        "repetition_penalty": 1.1  # Nuevo parámetro para evitar repeticiones
+        "repetition_penalty": 1.1
     }
 }
 
 # ======================
-# MANEJO DE DATOS (VERSIÓN CORREGIDA)
+# MANEJO DE DATOS (CORREGIDO)
 # ======================
+CHATS_FILE = "chats_db.json"
+
 def cargar_chats():
     try:
         if not os.path.exists(CHATS_FILE):
@@ -86,7 +87,7 @@ def guardar_chats(chats):
         return False
 
 # ======================
-# NÚCLEO DE IA
+# NÚCLEO DE IA (ACTUALIZADO)
 # ======================
 class ChatEngine:
     def __init__(self):
@@ -94,15 +95,12 @@ class ChatEngine:
     
     def generar_respuesta(self, prompt, historial):
         try:
-            # Validación de entrada
             prompt = self._sanitizar_input(prompt)
             if not prompt:
                 return "Por favor ingresa un mensaje válido"
             
-            # Construcción del contexto
             messages = self._construir_contexto(prompt, historial)
             
-             # Parámetros actualizados
             params = {
                 "max_new_tokens": MODEL_CONFIG[MODEL_NAME]["max_new_tokens"],
                 "temperature": MODEL_CONFIG[MODEL_NAME]["temperature"],
@@ -110,7 +108,6 @@ class ChatEngine:
                 "repetition_penalty": MODEL_CONFIG[MODEL_NAME]["repetition_penalty"]
             }
             
-           # Llamada API corregida
             response = self.client.chat_completion(
                 messages=messages,
                 model=MODEL_NAME,
@@ -128,18 +125,17 @@ class ChatEngine:
             "content": "Eres un asistente profesional. Responde en el mismo idioma del usuario."
         }]
         
-        # Contexto histórico (últimos 3 intercambios)
         for msg in historial[-3:]:
             messages.append({
                 "role": "user" if msg["rol"] == "user" else "assistant",
-                "content": msg["contenido"][:500]  # Limitar longitud
+                "content": msg["contenido"][:500]
             })
         
         messages.append({"role": "user", "content": prompt[:1000]})
         return messages
 
     def _sanitizar_input(self, text):
-        return text.strip().replace("\n", " ")[:1000]  # Limitar a 1000 caracteres
+        return text.strip().replace("\n", " ")[:1000]
 
     def _manejar_error(self, error):
         error_msg = str(error)
@@ -195,7 +191,7 @@ def barra_lateral():
                     eliminar_chat(chat)
         
         st.markdown("---")
-        st.caption(f"v1.0 | Modelo: {MODEL_NAME.split('/')[-1]}")
+        st.caption(f"v2.1 | Modelo: {MODEL_NAME.split('/')[-1]}")
 
 def eliminar_chat(chat):
     try:
@@ -249,7 +245,7 @@ barra_lateral()
 area_chat()
 
 # ======================
-# ESTILOS PROFESIONALES
+# ESTILOS
 # ======================
 st.markdown("""
 <style>
