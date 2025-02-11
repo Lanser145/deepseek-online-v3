@@ -37,24 +37,49 @@ MODEL_CONFIG = {
 }
 
 # ======================
-# MANEJO DE DATOS
+# MANEJO DE DATOS (VERSIÓN CORREGIDA)
 # ======================
-CHATS_FILE = "chats_db.json"
-
 def cargar_chats():
     try:
-        if os.path.exists(CHATS_FILE):
-            with open(CHATS_FILE, "r") as f:
-                return json.load(f)
+        if not os.path.exists(CHATS_FILE):
+            return []
+
+        with open(CHATS_FILE, "r", encoding="utf-8") as f:
+            contenido = f.read().strip()
+            
+            if not contenido:
+                return []
+
+            datos = json.loads(contenido)
+            
+            # Validar estructura básica
+            if not isinstance(datos, list):
+                st.error("Estructura inválida del archivo de chats. Reiniciando...")
+                return []
+                
+            return datos
+
+    except json.JSONDecodeError as e:
+        st.error(f"Error decodificando JSON: {e}. Creando nuevo archivo...")
+        with open(CHATS_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f)
         return []
+
     except Exception as e:
-        st.error(f"Error cargando historial: {str(e)}")
+        st.error(f"Error crítico: {str(e)}")
         st.stop()
 
 def guardar_chats(chats):
     try:
-        with open(CHATS_FILE, "w") as f:
-            json.dump(chats, f, indent=4, ensure_ascii=False)
+        with open(CHATS_FILE, "w", encoding="utf-8") as f:
+            json.dump(
+                chats,
+                f,
+                indent=4,
+                ensure_ascii=False,
+                separators=(",", ": "),
+                default=str
+            )
         return True
     except Exception as e:
         st.error(f"Error guardando datos: {str(e)}")
