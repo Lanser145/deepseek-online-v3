@@ -1,0 +1,16 @@
+[
+    {
+        "id": "1739313993220554000",
+        "titulo": "Chat 1",
+        "historial": [
+            {
+                "rol": "user",
+                "contenido": "gola"
+            },
+            {
+                "rol": "assistant",
+                "contenido": "🚨 Error técnico: InferenceClient.chat_completion() got an unexpected keyword argument 'max_new_tokens'"
+            }
+        ]
+    }
+]

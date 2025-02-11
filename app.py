@@ -28,7 +28,7 @@ MODEL_NAME = "HuggingFaceH4/zephyr-7b-beta"
 # ======================
 MODEL_CONFIG = {
     "HuggingFaceH4/zephyr-7b-beta": {
-        "max_new_tokens": 384,
+        "max_tokens": 384,
         "temperature": 0.2,
         "top_p": 0.95,
         "repetition_penalty": 1.1
@@ -102,7 +102,7 @@ class ChatEngine:
             messages = self._construir_contexto(prompt, historial)
             
             params = {
-                "max_new_tokens": MODEL_CONFIG[MODEL_NAME]["max_new_tokens"],
+                "max_tokens": MODEL_CONFIG[MODEL_NAME]["max_tokens"],
                 "temperature": MODEL_CONFIG[MODEL_NAME]["temperature"],
                 "top_p": MODEL_CONFIG[MODEL_NAME]["top_p"],
                 "repetition_penalty": MODEL_CONFIG[MODEL_NAME]["repetition_penalty"]
