@@ -24,19 +24,18 @@ assert HF_TOKEN, "❌ HF_TOKEN no encontrado en variables de entorno!"
 MODEL_NAME = "HuggingFaceH4/zephyr-7b-beta"
 
 # ======================
-# CONFIGURACIÓN OPTIMIZADA
+# CONFIGURACIÓN ACTUALIZADA
 # ======================
 MODEL_CONFIG = {
     "HuggingFaceH4/zephyr-7b-beta": {
         "max_tokens": 384,
         "temperature": 0.2,
         "top_p": 0.95,
-        "repetition_penalty": 1.1
     }
 }
 
 # ======================
-# MANEJO DE DATOS (CORREGIDO)
+# MANEJO DE DATOS
 # ======================
 CHATS_FILE = "chats_db.json"
 
@@ -53,9 +52,8 @@ def cargar_chats():
 
             datos = json.loads(contenido)
             
-            # Validar estructura básica
             if not isinstance(datos, list):
-                st.error("Estructura inválida del archivo de chats. Reiniciando...")
+                st.error("Estructura inválida del archivo. Reiniciando...")
                 return []
                 
             return datos
@@ -87,7 +85,7 @@ def guardar_chats(chats):
         return False
 
 # ======================
-# NÚCLEO DE IA (ACTUALIZADO)
+# NÚCLEO DE IA CORREGIDO
 # ======================
 class ChatEngine:
     def __init__(self):
@@ -101,17 +99,10 @@ class ChatEngine:
             
             messages = self._construir_contexto(prompt, historial)
             
-            params = {
-                "max_tokens": MODEL_CONFIG[MODEL_NAME]["max_tokens"],
-                "temperature": MODEL_CONFIG[MODEL_NAME]["temperature"],
-                "top_p": MODEL_CONFIG[MODEL_NAME]["top_p"],
-                "repetition_penalty": MODEL_CONFIG[MODEL_NAME]["repetition_penalty"]
-            }
-            
             response = self.client.chat_completion(
                 messages=messages,
                 model=MODEL_NAME,
-                **params
+                **MODEL_CONFIG[MODEL_NAME]
             )
             
             return response.choices[0].message.content.strip()
@@ -191,7 +182,7 @@ def barra_lateral():
                     eliminar_chat(chat)
         
         st.markdown("---")
-        st.caption(f"v2.1 | Modelo: {MODEL_NAME.split('/')[-1]}")
+        st.caption(f"v3.0 | Modelo: {MODEL_NAME.split('/')[-1]}")
 
 def eliminar_chat(chat):
     try:
