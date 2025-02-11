@@ -28,10 +28,11 @@ MODEL_NAME = "HuggingFaceH4/zephyr-7b-beta"
 # ======================
 MODEL_CONFIG = {
     "HuggingFaceH4/zephyr-7b-beta": {
-        "max_tokens": 384,  # Balance entre costo y rendimiento
-        "temperature": 0.2, # Mayor precisión
+        "max_new_tokens": 384,  # Parámetro renombrado
+        "temperature": 0.2,
         "top_p": 0.95,
-        "stop_sequences": ["\nUser:", "\nAssistant:"]
+        # Eliminado stop_sequences (no compatible con chat_completion)
+        "repetition_penalty": 1.1  # Nuevo parámetro para evitar repeticiones
     }
 }
 
@@ -76,13 +77,15 @@ class ChatEngine:
             # Construcción del contexto
             messages = self._construir_contexto(prompt, historial)
             
-            # Parámetros del modelo
+             # Parámetros actualizados
             params = {
-                **MODEL_CONFIG[MODEL_NAME],
-                "max_new_tokens": MODEL_CONFIG[MODEL_NAME]["max_tokens"]
+                "max_new_tokens": MODEL_CONFIG[MODEL_NAME]["max_new_tokens"],
+                "temperature": MODEL_CONFIG[MODEL_NAME]["temperature"],
+                "top_p": MODEL_CONFIG[MODEL_NAME]["top_p"],
+                "repetition_penalty": MODEL_CONFIG[MODEL_NAME]["repetition_penalty"]
             }
             
-            # Generación con manejo de errores
+           # Llamada API corregida
             response = self.client.chat_completion(
                 messages=messages,
                 model=MODEL_NAME,

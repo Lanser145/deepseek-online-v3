@@ -10,7 +10,11 @@
             {
                 "rol": "assistant",
                 "contenido": "Hola! Hola is the Spanish word for \"hello.\" In English, you can say \"hello\" or \"hi\" as a greeting. I hope this helps! Let me know if you have any other questions."
-            }
-        ]
-    }
-]
+            },
+            {
+                "rol": "user",
+                "contenido": "Me podrias ayudar con el ingles"
+            },
+            {
+                "rol": "assistant",
+                "contenido": 
